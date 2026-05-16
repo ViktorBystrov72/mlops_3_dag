@@ -1,0 +1,27 @@
+services:
+  airflow:
+    build: .
+    command: standalone
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/mlops/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "admin:admin"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/mlops/config/simple_auth_manager_passwords.json
+      MLOPS_ROOT: /opt/airflow/mlops
+      PYTHONPATH: /opt/airflow/mlops
+    volumes:
+      - airflow-data:/opt/airflow
+      - .:/opt/airflow/mlops
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/api/v2/monitor/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+    restart: unless-stopped
+
+volumes:
+  airflow-data:
