@@ -119,6 +119,12 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Airflow
+.airflow/
+logs/*
+!logs/.gitkeep
+config/airflow.cfg
+
 # Environments
 .env
 .venv
